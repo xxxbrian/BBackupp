@@ -44,19 +44,17 @@ struct WelcomeView: View {
 
     @ViewBuilder
     var background: some View {
-        ColorfulView(color: .constant([
-            .init("WelcomeColorMain"),
-            .init("WelcomeColorSecondary"),
-            .background,
-            .background,
-            .background,
-            .background,
-            .background,
-            .background,
-            .background,
-            .background,
-        ]), speed: .constant(0.25))
+        LinearGradient(
+                gradient: Gradient(colors: [
+                    Color("WelcomeColorMain"),
+                    Color("WelcomeColorSecondary"),
+                    Color.background
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
             .opacity(0.25)
+            .ignoresSafeArea()
     }
 
     var content: some View {
