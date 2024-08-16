@@ -31,7 +31,7 @@ struct BBackuppApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "main") {
             MainView()
         }
         .commands { commands }

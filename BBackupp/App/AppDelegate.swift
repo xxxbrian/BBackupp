@@ -33,6 +33,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = robotImage
         statusItem.button?.target = self
         statusItem.button?.action = #selector(activateStatusMenu(_:))
+
+        showDockIcon()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(windowWillClose(_:)),
+            name: NSWindow.willCloseNotification,
+            object: nil
+        )
+    }
+
+    func applicationDidBecomeActive(_: Notification) {
+        showDockIcon()
+    }
+
+    @objc func windowWillClose(_: Notification) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            if self?.relevantWindows().isEmpty ?? true {
+                self?.hideDockIcon()
+            }
+        }
+    }
+
+    func relevantWindows() -> [NSWindow] {
+        NSApp.windows.filter { window in
+            !window.isExcludedFromWindowsMenu &&
+                window.level.rawValue < NSWindow.Level.statusBar.rawValue &&
+                window.isVisible
+        }
     }
 
     @objc
@@ -87,6 +116,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_: Notification) {
         bakManager.saveAll()
         killAllChildren()
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    func hideDockIcon() {
+        NSApp.setActivationPolicy(.accessory)
+    }
+
+    func showDockIcon() {
+        NSApp.setActivationPolicy(.regular)
     }
 }
 

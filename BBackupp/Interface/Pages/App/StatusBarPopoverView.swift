@@ -11,10 +11,15 @@ import SwiftUI
 
 struct StatusBarPopoverView: View {
     @StateObject var backupManager = bakManager
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
+                Button("Open Main Window") {
+                    openMainWindow()
+                }
+                .buttonStyle(.borderedProminent)
                 Spacer()
                 Text("Exit")
                     .font(.footnote)
@@ -54,6 +59,23 @@ struct StatusBarPopoverView: View {
             .background,
         ]), speed: .constant(0))
             .opacity(0.25)
+    }
+
+    private func openMainWindow() {
+        if let window = NSApp.windows.first(where: { $0.title == "BBackupp" }) {
+            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
+        } else {
+            openWindow(id: "main")
+            // Give some time for the window to be created.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if let window = NSApp.windows.first(where: { $0.title == "BBackupp" }) {
+                    window.makeKeyAndOrderFront(nil)
+                    window.orderFrontRegardless()
+                }
+            }
+        }
+        NSApp.activate(ignoringOtherApps: true)
     }
 }
 

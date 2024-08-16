@@ -11,6 +11,8 @@
 	</dict>
 	<key>NSSupportsAutomaticTermination</key>
 	<false/>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
 </dict>
